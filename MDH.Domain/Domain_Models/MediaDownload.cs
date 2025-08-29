@@ -8,7 +8,7 @@ namespace MDH.Domain.Domain_Models
 {
     public  class MediaDownload
     {
-        public int Id { get; set; } // optional
+        public int Id { get; set; } 
         public string SourceUrl { get; set; } = string.Empty;
         public List<MediaFormat> Formats { get; set; } = new();
     }

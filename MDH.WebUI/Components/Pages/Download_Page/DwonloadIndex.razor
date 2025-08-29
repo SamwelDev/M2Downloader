@@ -1,27 +1,54 @@
 ﻿@page "/"
 @inject IDownloadService _service
 @inject NavigationManager Nav
+@inject ILogger<DwonloadIndex> _logger
 
-<h2 class="text-center my-4">🎵 Video & Audio Downloader</h2>
+<PageTitle>SHORSE|Free downloader</PageTitle>
+<div class="page-wrapper">
+    <div class="container mt-5">
+        <div class="">
+            <div class="d-flex justify-content-center align-items-center my-4">
+                <img src="/logo.png" alt="Banner Image" style="width: 60px; height: auto;" />
+                <h4 class="text-primary mb-0 me-3">Stripes Horse Downloader</h4>
+            </div>
 
-<div class="d-flex justify-content-center mb-3">
-    <input @bind="url" placeholder="Paste YouTube or media URL"
-           class="form-control w-50 me-2" />
-    <button class="btn btn-primary" @onclick="DownloadVideo" disabled="@string.IsNullOrWhiteSpace(url)">
-        Download Video
-    </button>
-    <button class="btn btn-secondary ms-2" @onclick="DownloadAudio" disabled="@string.IsNullOrWhiteSpace(url)">
-        Download Audio
-    </button>
-</div>
 
-@if (loading)
-{
-    <div class="text-center my-4">
-        <span class="spinner-border text-primary"></span>
-        <p>@loadingMessage</p>
+            <div>
+
+                <div class="">
+
+
+                    <div class="d-flex justify-content-center mb-3">
+                        <input @bind="url" style="font-style:italic;" placeholder="Paste your media URL here."
+                               class="form-control w-50 me-2" />
+                        <button class="btn btn-success" @onclick="DownloadVideo" disabled="@string.IsNullOrWhiteSpace(url)">
+                            Video
+                        </button>
+                        <button class="btn btn-outline-info ms-2" @onclick="DownloadAudio" disabled="@string.IsNullOrWhiteSpace(url)">
+                            Audio
+                        </button>
+                    </div>
+                    <div>
+                        <div class=" text-center" role="alert">
+                            <strong>Note:</strong><small class="swahili-label">This tool is for personal use only. Please respect copyright laws and the terms of service of the content providers</small> .
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-}
+
+
+    @if (loading)
+    {
+        <div class="text-center my-4">
+            <span class="spinner-border text-success"></span>
+            <p>@loadingMessage</p>
+        </div>
+    }
+
+</div>
 
 @code {
     private string url = "";
@@ -36,17 +63,21 @@
         if (string.IsNullOrWhiteSpace(url)) return;
 
         loading = true;
-        loadingMessage = audioOnly ? "Downloading audio..." : "Downloading video...";
+        loadingMessage = audioOnly ? "Downloading audio only..." : "Downloading video only...";
         try
         {
             var filePath = await _service.DownloadVideoAsync(url, audioOnly);
             if (!string.IsNullOrEmpty(filePath))
             {
-                // Redirect to a temporary download link
+             
                 var fileName = Path.GetFileName(filePath);
                 var downloadUrl = $"/download/{fileName}";
                 Nav.NavigateTo(downloadUrl, forceLoad: true);
             }
+        }catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error downloading media from URL: {Url}", url);
+            loadingMessage = "An error occurred while processing your request. Please try again.";
         }
         finally
         {
