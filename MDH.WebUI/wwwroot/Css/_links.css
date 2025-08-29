@@ -1,0 +1,37 @@
+﻿ul,li{
+    list-style:none !important;
+}
+a{
+    text-decoration-line:none !important;
+}
+
+
+._singleclick {
+    border: 1px dashed #f3f4f5;
+}
+
+    ._singleclick:hover {
+        border: 1px dashed #a5c0f2;
+        cursor: pointer;
+    }
+
+._doubleclick {
+    border: 1px dashed #f3f4f5;
+}
+
+    ._doubleclick:hover {
+        border: 1px dashed red;
+        cursor: pointer;
+    }
+
+.home-internals {
+    height: 320px;
+    width: 320px;
+    background-color:#fff;
+}
+
+    .home-internals:hover {
+        height: 350px;
+        width: 350px;
+        transition-duration:0.5s;
+    }

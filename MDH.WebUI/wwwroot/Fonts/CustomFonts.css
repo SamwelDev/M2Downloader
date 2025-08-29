@@ -1,0 +1,75 @@
+﻿@font-face {
+    font-family: 'Jakarta Light';
+    src: url('JakartaSans/PlusJakartaSans-Light.ttf');
+    font-weight:lighter;
+}
+
+@font-face {
+    font-family: 'Jakarta Medium';
+    src: url('JakartaSans/PlusJakartaSans-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Jakarta Regular';
+    src: url('JakartaSans/PlusJakartaSans-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Jakarta SemiBold';
+    src: url('JakartaSans/PlusJakartaSans-SemiBold.ttf');
+}
+
+
+/*OPEN SANS*/
+
+@font-face {
+    font-family: 'Open Sans Light';
+    src: url('OpenSans/OpenSans-Light.ttf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Open Sans Medium';
+    src: url('OpenSans/OpenSans-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Open Sans Regular';
+    src: url('OpenSans/OpenSans-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans SemiBold';
+    src: url('OpenSans/OpenSans-SemiBold.ttf');
+}
+
+/*CHACKRA PETCH*/
+
+@font-face {
+    font-family: 'Chakra Petch Light';
+    src: url('Chakra_Petch/ChakraPetch-Light.ttf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Chakra Petch Regular';
+    src: url('Chakra_Petch/ChakraPetch-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Chakra Petch Italic';
+    src: url('Chakra_Petch/ChakraPetch-Italic.ttf');
+}
+
+@font-face {
+    font-family: 'Chakra Petch SemiBold';
+    src: url('Chakra_Petch/ChakraPetch-SemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'Chakra Petch Bold';
+    src: url('Chakra_Petch/ChakraPetch-Bold.ttf');
+    font-weight: bold;
+}

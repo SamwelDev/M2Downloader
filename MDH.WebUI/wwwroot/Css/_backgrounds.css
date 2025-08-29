@@ -1,0 +1,32 @@
+﻿.loginBackground
+{
+    background:url(../Images/Zenji.jpg);
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    background-color:#165836;
+}
+
+.bg-xs {
+    background-color: #1f5081;
+    color: #fff !important;
+    font-weight: 500 !important;
+    opacity: 0.95;
+}
+
+.bg-xss {
+    background-color: rgba(119, 119, 119, 0.068) !important;
+}
+
+.bg-blue {
+    background-color: #001845 !important;
+}
+
+.custom-thead th, .custom-thead td {
+    background-color: #003566 !important;
+    color: #ffffff !important;
+}
+
+.wrapper-bg {
+    background-image: linear-gradient(to bottom, #ffffff, #fbfbfb, #f7f7f7, #f4f4f4, #f0f0f0);
+}

@@ -1,0 +1,134 @@
+﻿.fullpage-container
+{
+    display:block;
+    width:100%;
+    height:100vh !important;
+}
+
+.hanging-container {
+    /*background: rgb(255, 255, 255, 0.99) !important;*/
+    background: linear-gradient(to right, #FFFFFF, #FDFDFD);
+}
+
+.footer-container
+{
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    border-top:0.2px solid #ffffff16;
+}
+
+.inputBg {
+    background-color: #F3F3F3;
+}
+
+
+
+.nationalBanner {
+    background-color: #0d3b66;
+}
+
+.modelBg {
+    background: rgb(0,0,0, 0.2);
+    /*background-color: #03045e;*/
+}
+
+.loginWrapper{
+    width:100%;
+    height:100vh;
+    padding:0px;
+    height:0px;
+    display:block;
+    background:#f7f7f7;
+}
+
+.boxShadow {
+    -webkit-box-shadow: 4px 1px 62px -24px rgba(121, 121, 121, 1);
+    -moz-box-shadow: 4px 1px 62px -24px rgba(121, 121, 121, 1);
+    box-shadow: 4px 1px 62px -24px rgba(121, 121, 121, 1);
+}
+
+.cardContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    background-color: #f7f7f7;
+
+
+    border-radius: 2px;
+    padding: 20px;
+}
+
+.modal-fullscreen .modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 120px); /* adjust depending on your header/footer */
+}
+
+.custom-offcanvas-height {
+    height: 85vh !important;
+}
+
+.custom-thead th, .custom-thead td {
+    background-color: #003566 !important;
+    color: #ffffff !important;
+    font-weight:100 !important;
+}
+
+
+    .fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-inernalNav .nav-link {
+    color: #222 !important;
+    padding: 7px 0px !important;
+    margin:1px 10px;
+    margin-left:0px;
+    transition: background-color 0.2s ease;
+}
+
+.custom-inernalNav .nav-item .nav-link.active {
+    background-color: #fff !important;
+    color: #222 !important;
+    padding:7px 0px !important;
+    border-bottom: 2px solid #888;
+}
+
+.custom-inernalNav .nav-item .nav-link {
+    background-color: #fff !important;
+    color: #222 !important;
+    border: 2px dashed #fff;
+}
+
+.custom-thead th, .custom-thead td {
+    background-color: #003566 !important;
+    color: #ffffff !important;
+    padding:0.9rem !important;
+}
+
+
+
+
+
+.timeline-wrapper {
+    max-height: 80vh;
+    min-height: 60vh;
+    overflow-y: auto;
+    padding-right: 0.5rem; /* optional, for space beside scrollbar */
+}

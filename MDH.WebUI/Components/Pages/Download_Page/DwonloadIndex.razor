@@ -1,0 +1,57 @@
+﻿@page "/"
+@inject IDownloadService _service
+@inject NavigationManager Nav
+
+<h2 class="text-center my-4">🎵 Video & Audio Downloader</h2>
+
+<div class="d-flex justify-content-center mb-3">
+    <input @bind="url" placeholder="Paste YouTube or media URL"
+           class="form-control w-50 me-2" />
+    <button class="btn btn-primary" @onclick="DownloadVideo" disabled="@string.IsNullOrWhiteSpace(url)">
+        Download Video
+    </button>
+    <button class="btn btn-secondary ms-2" @onclick="DownloadAudio" disabled="@string.IsNullOrWhiteSpace(url)">
+        Download Audio
+    </button>
+</div>
+
+@if (loading)
+{
+    <div class="text-center my-4">
+        <span class="spinner-border text-primary"></span>
+        <p>@loadingMessage</p>
+    </div>
+}
+
+@code {
+    private string url = "";
+    private bool loading = false;
+    private string loadingMessage = "";
+
+    private async Task DownloadVideo() => await DownloadMedia(audioOnly: false);
+    private async Task DownloadAudio() => await DownloadMedia(audioOnly: true);
+
+    private async Task DownloadMedia(bool audioOnly)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return;
+
+        loading = true;
+        loadingMessage = audioOnly ? "Downloading audio..." : "Downloading video...";
+        try
+        {
+            var filePath = await _service.DownloadVideoAsync(url, audioOnly);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                // Redirect to a temporary download link
+                var fileName = Path.GetFileName(filePath);
+                var downloadUrl = $"/download/{fileName}";
+                Nav.NavigateTo(downloadUrl, forceLoad: true);
+            }
+        }
+        finally
+        {
+            loading = false;
+            loadingMessage = "";
+        }
+    }
+}

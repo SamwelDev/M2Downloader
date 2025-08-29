@@ -1,0 +1,20 @@
+﻿
+.placeholder-glow .placeholder {
+    background: linear-gradient( 90deg, #2d2d2d 25%, /* Dark base */
+    #3e3e3e 37%, /* Slight glow */
+    #2d2d2d 63% );
+    background-size: 400% 100%;
+    animation: glowPlaceholder 1.4s ease infinite;
+    color: transparent !important;
+}
+
+@keyframes glowPlaceholder {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
