@@ -8,9 +8,14 @@ namespace MDH.Domain.Domain_Models
 {
     public class MediaFormat
     {
-        public string FormatCode { get; set; } = string.Empty; 
-        public string Extension { get; set; } = string.Empty;
-        public string Quality { get; set; } = string.Empty;
-        public string FileName { get; set; } = string.Empty;
-    }
+        public string FormatId { get; set; } = "";
+        public string Extension { get; set; } = "";
+        public string Resolution { get; set; } = ""; 
+        public string Note { get; set; } = ""; 
+        public long? FileSize { get; set; } 
+
+        public string FileSizeReadable => FileSize.HasValue 
+            ? $"{(FileSize.Value / 1024.0 / 1024.0):0.##} MB" 
+            : "Unknown";
+        }
 }

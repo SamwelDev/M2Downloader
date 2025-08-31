@@ -1,88 +1,188 @@
 ﻿@page "/"
 @inject IDownloadService _service
-@inject NavigationManager Nav
+@inject IJSRuntime JS
 @inject ILogger<DwonloadIndex> _logger
 
-<PageTitle>SHORSE|Free downloader</PageTitle>
-<div class="page-wrapper">
-    <div class="container mt-5">
-        <div class="">
-            <div class="d-flex justify-content-center align-items-center my-4">
-                <img src="/logo.png" alt="Banner Image" style="width: 60px; height: auto;" />
-                <h4 class="text-primary mb-0 me-3">Stripes Horse Downloader</h4>
+<PageTitle>SHORSE | Free Downloader</PageTitle>
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <img src="/logo.png" alt="Logo" style="width: 70px;" class="mb-2" />
+        <h4 class="fw-bold text-primary">Stripes Horse Downloader</h4>
+        <small class="swahili-label">Download high-quality music videos or audio directly from links.</small>
+    </div>
+
+    <!-- URL Input & Fetch Formats -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-12 col-md-12">
+            <div class="input-group shadow-sm">
+                <input @bind="url"
+                       class="form-control form-control-lg rounded-start rounded-3"
+                       placeholder="Paste your URL here..." />
+                <button class="btn btn-primary"
+                        @onclick="FetchFormats"
+                        disabled="@string.IsNullOrWhiteSpace(url)">
+                    Show Formats
+                </button>
             </div>
+        </div>
+    </div>
 
+    <!-- Thumbnail Preview -->
+    @if (!string.IsNullOrWhiteSpace(thumbnailUrl))
+    {
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-6 text-center">
+                <img src="@thumbnailUrl" alt="Video Thumbnail" class="img-fluid rounded shadow-sm" />
+            </div>
+        </div>
+    }
 
-            <div>
+    <!-- Format Selection -->
+    @if (formats?.Any() == true)
+    {
+        <div class="row justify-content-center mb-3">
+            <div class="col-lg-6">
+                <label class="form-label fw-bold">Choose Format:</label>
+                <select class="form-select" @bind="selectedFormat">
+                    @foreach (var f in formats)
+                    {
+                        <option value="@f.FormatId">
+                            @($"{f.Resolution} - {f.Extension} - {f.FileSizeReadable} {f.Note}")
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
 
-                <div class="">
+        <!-- Download Buttons -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-6 d-flex justify-content-between">
+                <button class="btn btn-success"
+                        @onclick="DownloadSelectedFormat"
+                        disabled="@string.IsNullOrWhiteSpace(selectedFormat)">
+                    <i class="bi bi-camera-video"></i> Download Video
+                </button>
+                <button class="btn btn-info text-white"
+                        @onclick="DownloadSelectedAudio"
+                        disabled="@string.IsNullOrWhiteSpace(selectedFormat)">
+                    <i class="bi bi-music-note-beamed"></i> Download Audio
+                </button>
+            </div>
+        </div>
+    }
 
-
-                    <div class="d-flex justify-content-center mb-3">
-                        <input @bind="url" style="font-style:italic;" placeholder="Paste your media URL here."
-                               class="form-control w-50 me-2" />
-                        <button class="btn btn-success" @onclick="DownloadVideo" disabled="@string.IsNullOrWhiteSpace(url)">
-                            Video
-                        </button>
-                        <button class="btn btn-outline-info ms-2" @onclick="DownloadAudio" disabled="@string.IsNullOrWhiteSpace(url)">
-                            Audio
-                        </button>
-                    </div>
-                    <div>
-                        <div class=" text-center" role="alert">
-                            <strong>Note:</strong><small class="swahili-label">This tool is for personal use only. Please respect copyright laws and the terms of service of the content providers</small> .
+    <!-- Progress Bar -->
+    @if (loading)
+    {
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <h6 class="fw-bold">@loadingMessage</h6>
+                        <div class="progress mt-3" style="height: 28px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                 role="progressbar"
+                                 style="width:@progress%;"
+                                 aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100">
+                                @progress%
+                            </div>
                         </div>
+                        <small class="text-muted mt-2 d-block">Please don’t close this tab while downloading.</small>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
-
-
-    @if (loading)
-    {
-        <div class="text-center my-4">
-            <span class="spinner-border text-success"></span>
-            <p>@loadingMessage</p>
-        </div>
     }
-
 </div>
 
 @code {
     private string url = "";
+    private string? thumbnailUrl;
     private bool loading = false;
     private string loadingMessage = "";
+    private int progress = 0;
 
-    private async Task DownloadVideo() => await DownloadMedia(audioOnly: false);
-    private async Task DownloadAudio() => await DownloadMedia(audioOnly: true);
+    private List<MediaFormat> formats = new();
+    private string selectedFormat = "";
 
-    private async Task DownloadMedia(bool audioOnly)
+    private async Task FetchFormats()
     {
+        _logger.LogInformation("Fetching formats for URL: {Url}", url);
         if (string.IsNullOrWhiteSpace(url)) return;
 
         loading = true;
-        loadingMessage = audioOnly ? "Downloading audio only..." : "Downloading video only...";
+        loadingMessage = "Fetching available formats...";
+
         try
         {
-            var filePath = await _service.DownloadVideoAsync(url, audioOnly);
-            if (!string.IsNullOrEmpty(filePath))
-            {
-             
-                var fileName = Path.GetFileName(filePath);
-                var downloadUrl = $"/download/{fileName}";
-                Nav.NavigateTo(downloadUrl, forceLoad: true);
-            }
-        }catch (Exception ex)
+            formats = await _service.GetAvailableFormatsAsync(url);
+            if (formats.Any())
+                selectedFormat = formats.First().FormatId;
+            else
+                loadingMessage = "No formats found.";
+
+            thumbnailUrl = await _service.GetThumbnailAsync(url);
+        }
+        catch (Exception ex)
         {
-            _logger.LogError(ex, "Error downloading media from URL: {Url}", url);
-            loadingMessage = "An error occurred while processing your request. Please try again.";
+            _logger.LogError(ex, "Error fetching formats or thumbnail");
+            loadingMessage = " Failed to fetch formats or thumbnail.";
         }
         finally
         {
             loading = false;
-            loadingMessage = "";
+            StateHasChanged();
+        }
+    }
+
+    private async Task DownloadSelectedFormat() => await DownloadMedia(audioOnly: false);
+    private async Task DownloadSelectedAudio() => await DownloadMedia(audioOnly: true);
+
+    private async Task DownloadMedia(bool audioOnly)
+    {
+        if (string.IsNullOrWhiteSpace(selectedFormat)) return;
+
+        loading = true;
+        progress = 0;
+        loadingMessage = audioOnly ? "Fetching audio stream..." : "Fetching video stream...";
+
+        try
+        {
+            var filePath = await _service.DownloadVideoAsync(
+                url,
+                audioOnly,
+                formatId: selectedFormat,
+                (percent, line) =>
+                {
+                    progress = percent;
+                    loadingMessage = line;
+                    InvokeAsync(StateHasChanged);
+                });
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                var fileName = Path.GetFileName(filePath);
+                var bytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(bytes);
+                await JS.InvokeVoidAsync("downloadFile", fileName, base64);
+                loadingMessage = " Download completed!";
+            }
+            else
+            {
+                loadingMessage = " Download failed. Please check the URL.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error downloading media from URL: {Url}", url);
+            loadingMessage = " An error occurred. Please try again.";
+        }
+        finally
+        {
+            loading = false;
         }
     }
 }
